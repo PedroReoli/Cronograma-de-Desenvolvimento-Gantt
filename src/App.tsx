@@ -13,8 +13,8 @@ function App() {
         useCORS: true,
         allowTaint: true,
         background: '#ffffff',
-        width: ganttRef.current.scrollWidth,
-        height: ganttRef.current.scrollHeight,
+        width: ganttRef.current.scrollWidth + 50, // Adiciona margem extra na largura
+        height: ganttRef.current.scrollHeight + 20, // Adiciona margem extra na altura
       })
 
       const image = canvas.toDataURL('image/png', 1.0)
