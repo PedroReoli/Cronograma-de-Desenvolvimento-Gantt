@@ -22,10 +22,11 @@ const getYearBounds = (tasks: Task[]) => {
 }
 
 const dayIndexInYear = (date: Date): number => {
-  const start = new Date(date.getFullYear(), 0, 0)
+  const start = new Date(date.getFullYear(), 0, 1)
   const diff = date.getTime() - start.getTime()
   const oneDay = 1000 * 60 * 60 * 24
-  return Math.floor(diff / oneDay)
+  const dayIndex = Math.floor(diff / oneDay)
+  return dayIndex
 }
 
 const isLeapYear = (year: number): boolean => {
@@ -49,6 +50,8 @@ const formatDate = (dateString: string): string => {
 const GanttSchedule = () => {
   const yearBounds = useMemo(() => getYearBounds(tasks), [])
   const totalDays = getDaysInYear(yearBounds.start.getFullYear())
+  
+
 
   // Cálculo de posição e largura das barras
   const getBarPosition = (date: string) => {
@@ -68,13 +71,7 @@ const GanttSchedule = () => {
 
   const quarters = ["1º trimestre", "2º trimestre", "3º trimestre", "4º trimestre"]
 
-  const getCurrentDatePosition = () => {
-    const today = new Date()
-    const dayIndex = dayIndexInYear(today)
-    return (dayIndex / totalDays) * 100
-  }
 
-  const currentDatePosition = getCurrentDatePosition()
 
 
      return (
@@ -84,18 +81,19 @@ const GanttSchedule = () => {
       <div className="overflow-x-auto">
         <div className="flex min-w-max">
                      {/* Tabela da esquerda */}
-           <div className="flex-shrink-0 w-[1200px]">
+                       <div className="flex-shrink-0 w-[1400px]">
             {/* Cabeçalho da tabela */}
             <div className="sticky top-0 bg-white border-b border-black/10 z-10">
-              <div className="grid grid-cols-8 text-sm font-semibold text-black">
+              <div className="grid grid-cols-9 text-sm font-semibold text-black">
                 <div className="p-3 text-center border-r border-black/10">Id</div>
                                  <div className="p-3 text-center border-r border-black/10">Realizado</div>
-                <div className="p-3 border-r border-black/10">Nome da Tarefa</div>
+                <div className="p-3 border-r border-black/10">Nome da Sprint</div>
                 <div className="p-3 text-center border-r border-black/10">Duração</div>
                 <div className="p-3 text-center border-r border-black/10">Início</div>
                 <div className="p-3 text-center border-r border-black/10">Término</div>
                 <div className="p-3 text-center border-r border-black/10">Predição real</div>
-                <div className="p-3 text-center">Término real</div>
+                <div className="p-3 text-center border-r border-black/10">Término real</div>
+                <div className="p-3 text-center">Tarefas realizadas</div>
               </div>
             </div>
 
@@ -104,7 +102,7 @@ const GanttSchedule = () => {
               {tasks.map((task, index) => (
                 <div
                   key={task.id}
-                  className={`grid grid-cols-8 text-sm border-b border-black/5 hover:bg-black/5 transition-colors ${
+                  className={`grid grid-cols-9 text-sm border-b border-black/5 hover:bg-black/5 transition-colors ${
                     index % 2 === 0 ? "bg-black/0" : "bg-black/[0.02]"
                   }`}
                 >
@@ -128,8 +126,11 @@ const GanttSchedule = () => {
                   <div className="p-3 text-center border-r border-black/5 text-xs text-black/70">
                     {task.startActual ? formatDate(task.startActual) : "ND"}
                   </div>
-                  <div className="p-3 text-center text-xs text-black/70">
+                  <div className="p-3 text-center text-xs text-black/70 border-r border-black/5">
                     {task.endActual ? formatDate(task.endActual) : "ND"}
+                  </div>
+                  <div className="p-3 text-xs text-black/70">
+                    {task.completedTasks || "ND"}
                   </div>
                 </div>
               ))}
@@ -138,10 +139,6 @@ const GanttSchedule = () => {
 
           {/* Timeline da direita */}
           <div className="flex-1 min-w-0 relative">
-                         <div
-               className="absolute top-0 bottom-0 border-l-2 border-gray-400 z-30 pointer-events-none"
-               style={{ left: `${currentDatePosition}%` }}
-             />
 
             {/* Cabeçalho da timeline */}
             <div className="sticky top-0 bg-white border-b border-black/10 z-10">
@@ -170,69 +167,43 @@ const GanttSchedule = () => {
               </div>
             </div>
 
-            {/* Barras do Gantt */}
-            <div className="relative">
-              {tasks.map((task, index) => {
-                const plannedLeft = getBarPosition(task.startPlanned)
-                const plannedWidth = getBarWidth(task.startPlanned, task.endPlanned)
-                const actualLeft = task.startActual ? getBarPosition(task.startActual) : plannedLeft
-                const actualWidth =
-                  task.startActual && task.endActual ? getBarWidth(task.startActual, task.endActual) : plannedWidth
+                         {/* Barras do Gantt */}
+             <div className="relative">
+                               {tasks.map((task, index) => {
+                  const plannedLeft = getBarPosition(task.startPlanned)
+                  const plannedWidth = getBarWidth(task.startPlanned, task.endPlanned)
+                  const actualLeft = task.startActual ? getBarPosition(task.startActual) : plannedLeft
+                  const actualWidth =
+                    task.startActual && task.endActual ? getBarWidth(task.startActual, task.endActual) : plannedWidth
 
-                return (
+                 
+
+                 return (
                   <div
                     key={task.id}
                     className={`relative h-12 border-b border-black/5 hover:bg-black/[0.02] transition-colors group ${
                       index % 2 === 0 ? "bg-black/0" : "bg-black/[0.01]"
                     }`}
                   >
-                    {task.id < tasks.length && (
-                      <svg
-                        className="absolute top-6 pointer-events-none z-20 opacity-60"
-                        style={{
-                          left: `${plannedLeft + plannedWidth}%`,
-                          width: "20px",
-                          height: "24px",
-                        }}
-                      >
-                                                 <line
-                           x1="0"
-                           y1="0"
-                           x2="15"
-                           y2="12"
-                           stroke="rgb(75 85 99)"
-                           strokeWidth="1"
-                           markerEnd="url(#arrowhead)"
-                         />
-                         <defs>
-                           <marker id="arrowhead" markerWidth="4" markerHeight="3" refX="4" refY="1.5" orient="auto">
-                             <polygon points="0 0, 4 1.5, 0 3" fill="rgb(75 85 99)" />
-                           </marker>
-                         </defs>
-                      </svg>
-                    )}
-
                     <div
                       className="absolute top-2 h-8 bg-gray-400 rounded-sm shadow-sm group-hover:shadow-md transition-shadow"
                       style={{
                         left: `${plannedLeft}%`,
-                        width: `${plannedWidth}%`,
+                        width: `${Math.max(plannedWidth, 1)}%`,
                       }}
                       title={`${task.name} - Previsto: ${formatDate(task.startPlanned)} a ${formatDate(task.endPlanned)}`}
                     />
 
-                                         {task.startActual && (
-                       <div
-                         className="absolute top-2 h-8 bg-black/80 rounded-sm shadow-sm border border-black"
-                         style={{
-                           left: `${actualLeft}%`,
-                           width: `${actualWidth}%`,
-                         }}
-                         title={`${task.name} - Real: ${formatDate(task.startActual)} a ${task.endActual ? formatDate(task.endActual) : "Em andamento"}`}
-                       />
-                     )}
-
-                    
+                    {task.startActual && (
+                      <div
+                        className="absolute top-2 h-8 bg-black/80 rounded-sm shadow-sm border border-black"
+                        style={{
+                          left: `${actualLeft}%`,
+                          width: `${actualWidth}%`,
+                        }}
+                        title={`${task.name} - Real: ${formatDate(task.startActual)} a ${task.endActual ? formatDate(task.endActual) : "Em andamento"}`}
+                      />
+                    )}
 
                     <div className="absolute inset-0 grid grid-cols-12 pointer-events-none">
                       {Array.from({ length: 12 }).map((_, i) => (
