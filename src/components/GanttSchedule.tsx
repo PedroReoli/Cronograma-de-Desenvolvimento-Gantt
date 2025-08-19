@@ -50,8 +50,6 @@ const formatDate = (dateString: string): string => {
 const GanttSchedule = () => {
   const yearBounds = useMemo(() => getYearBounds(tasks), [])
   const totalDays = getDaysInYear(yearBounds.start.getFullYear())
-  
-
 
   // Cálculo de posição e largura das barras
   const getBarPosition = (date: string) => {
@@ -71,29 +69,39 @@ const GanttSchedule = () => {
 
   const quarters = ["1º trimestre", "2º trimestre", "3º trimestre", "4º trimestre"]
 
-
-
-
-     return (
-     <div className="bg-white text-black border border-black/10 rounded-lg overflow-hidden relative">
-
+  return (
+    <div className="bg-white text-black border border-black/10 rounded-lg overflow-hidden relative">
       {/* Container principal com scroll horizontal */}
       <div className="overflow-x-auto">
         <div className="flex min-w-max">
-                     {/* Tabela da esquerda */}
-                       <div className="flex-shrink-0 w-[1400px]">
+          {/* Tabela da esquerda */}
+          <div className="flex-shrink-0 w-[1400px]">
             {/* Cabeçalho da tabela */}
             <div className="sticky top-0 bg-white border-b border-black/10 z-10">
               <div className="grid grid-cols-9 text-sm font-semibold text-black h-16">
-                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Id</div>
-                                 <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Realizado</div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">
+                  Id
+                </div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">
+                  Realizado
+                </div>
                 <div className="px-3 py-3 border-r border-black/10 flex items-center">Nome da Sprint</div>
-                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Duração</div>
-                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Início</div>
-                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Término</div>
-                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Predição real</div>
-                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Término real</div>
-                <div className="px-3 py-3 text-center flex items-center justify-center">Tarefas realizadas</div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">
+                  Duração
+                </div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">
+                  Início
+                </div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">
+                  Término
+                </div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">
+                  Predição real
+                </div>
+                <div className="px-3 py-3 text-center text-xs text-black/70 border-r border-black/5 flex items-center justify-center">
+                  Término real
+                </div>
+                <div className="px-3 py-3 text-xs text-black/70 flex items-center">Tarefas realizadas</div>
               </div>
             </div>
 
@@ -106,17 +114,21 @@ const GanttSchedule = () => {
                     index % 2 === 0 ? "bg-black/0" : "bg-black/[0.02]"
                   }`}
                 >
-                  <div className="px-3 py-3 text-center border-r border-black/5 font-mono text-black/80 flex items-center justify-center">{task.id}</div>
-                                     <div className="px-3 py-3 text-center border-r border-black/5 flex items-center justify-center gap-1">
-                     <span className="text-black text-sm">{task.checked ? "✓" : "□"}</span>
-                   </div>
+                  <div className="px-3 py-3 text-center border-r border-black/5 font-mono text-black/80 flex items-center justify-center">
+                    {task.id}
+                  </div>
+                  <div className="px-3 py-3 text-center border-r border-black/5 flex items-center justify-center gap-1">
+                    <span className="text-black text-sm">{task.checked ? "✓" : "□"}</span>
+                  </div>
                   <div
                     className="px-3 py-3 border-r border-black/5 font-medium hover:text-black/80 transition-colors flex items-center"
                     style={{ marginLeft: `${(task.level - 1) * 12}px` }}
                   >
                     {task.name}
                   </div>
-                  <div className="px-3 py-3 text-center border-r border-black/5 text-black/70 flex items-center justify-center">{task.durationDays} dias</div>
+                  <div className="px-3 py-3 text-center border-r border-black/5 text-black/70 flex items-center justify-center">
+                    {task.durationDays} dias
+                  </div>
                   <div className="px-3 py-3 text-center border-r border-black/5 text-xs text-black/70 flex items-center justify-center">
                     {formatDate(task.startPlanned)}
                   </div>
@@ -129,9 +141,7 @@ const GanttSchedule = () => {
                   <div className="px-3 py-3 text-center text-xs text-black/70 border-r border-black/5 flex items-center justify-center">
                     {task.endActual ? formatDate(task.endActual) : "ND"}
                   </div>
-                  <div className="px-3 py-3 text-xs text-black/70 flex items-center">
-                    {task.completedTasks || "ND"}
-                  </div>
+                  <div className="px-3 py-3 text-xs text-black/70 flex items-center">{task.completedTasks || "ND"}</div>
                 </div>
               ))}
             </div>
@@ -139,27 +149,26 @@ const GanttSchedule = () => {
 
           {/* Timeline da direita */}
           <div className="flex-1 min-w-0 relative">
-
             {/* Cabeçalho da timeline */}
             <div className="sticky top-0 bg-white border-b border-black/10 z-10">
               {/* Trimestres */}
-              <div className="grid grid-cols-4 text-xs font-medium text-black border-b border-black/5">
+              <div className="grid grid-cols-4 text-xs font-medium text-gray-600 border-b border-gray-200">
                 {quarters.map((quarter) => (
-                                     <div
-                     key={quarter}
-                     className="py-0 px-0 text-center border-r border-black/5 last:border-r-0 bg-gray-50 text-[10px]"
-                   >
+                  <div
+                    key={quarter}
+                    className="py-3 px-0 text-center border-r border-gray-200 last:border-r-0 bg-gray-100 text-[10px] flex items-center justify-center h-8"
+                  >
                     {quarter}
                   </div>
                 ))}
               </div>
 
               {/* Meses */}
-              <div className="grid grid-cols-12 text-xs text-black/70">
+              <div className="grid grid-cols-12 text-xs text-gray-500">
                 {months.map((month) => (
                   <div
                     key={month}
-                    className="py-1 px-1 text-center border-r border-black/5 last:border-r-0 hover:bg-black/5 transition-colors"
+                    className="py-1 px-1 text-center border-r border-gray-200 last:border-r-0 hover:bg-gray-50 transition-colors flex items-center justify-center h-8"
                   >
                     {month}
                   </div>
@@ -167,18 +176,16 @@ const GanttSchedule = () => {
               </div>
             </div>
 
-                         {/* Barras do Gantt */}
-             <div className="relative">
-                               {tasks.map((task, index) => {
-                  const plannedLeft = getBarPosition(task.startPlanned)
-                  const plannedWidth = getBarWidth(task.startPlanned, task.endPlanned)
-                  const actualLeft = task.startActual ? getBarPosition(task.startActual) : plannedLeft
-                  const actualWidth =
-                    task.startActual && task.endActual ? getBarWidth(task.startActual, task.endActual) : plannedWidth
+            {/* Barras do Gantt */}
+            <div className="relative">
+              {tasks.map((task, index) => {
+                const plannedLeft = getBarPosition(task.startPlanned)
+                const plannedWidth = getBarWidth(task.startPlanned, task.endPlanned)
+                const actualLeft = task.startActual ? getBarPosition(task.startActual) : plannedLeft
+                const actualWidth =
+                  task.startActual && task.endActual ? getBarWidth(task.startActual, task.endActual) : plannedWidth
 
-                 
-
-                 return (
+                return (
                   <div
                     key={task.id}
                     className={`relative h-16 border-b border-black/5 hover:bg-black/[0.02] transition-colors group ${
@@ -186,7 +193,7 @@ const GanttSchedule = () => {
                     }`}
                   >
                     <div
-                      className="absolute top-4 h-8 bg-gray-400 rounded-sm shadow-sm group-hover:shadow-md transition-shadow"
+                      className="absolute top-4 h-8 bg-gray-300 rounded-sm shadow-sm group-hover:shadow-md transition-shadow"
                       style={{
                         left: `${plannedLeft}%`,
                         width: `${Math.max(plannedWidth, 1)}%`,
@@ -196,7 +203,7 @@ const GanttSchedule = () => {
 
                     {task.startActual && (
                       <div
-                        className="absolute top-4 h-8 bg-black/80 rounded-sm shadow-sm border border-black"
+                        className="absolute top-4 h-8 bg-gray-600 rounded-sm shadow-sm border border-gray-500"
                         style={{
                           left: `${actualLeft}%`,
                           width: `${actualWidth}%`,
@@ -207,7 +214,7 @@ const GanttSchedule = () => {
 
                     <div className="absolute inset-0 grid grid-cols-12 pointer-events-none">
                       {Array.from({ length: 12 }).map((_, i) => (
-                        <div key={i} className="border-r border-black/[0.03]" />
+                        <div key={i} className="border-r border-gray-200" />
                       ))}
                     </div>
                   </div>
