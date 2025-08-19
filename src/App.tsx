@@ -10,10 +10,9 @@ function App() {
 
     try {
       const canvas = await html2canvas(ganttRef.current, {
-        scale: 2, // Melhor qualidade
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff',
+        background: '#ffffff',
         width: ganttRef.current.scrollWidth,
         height: ganttRef.current.scrollHeight,
       })

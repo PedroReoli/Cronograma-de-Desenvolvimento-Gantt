@@ -84,16 +84,16 @@ const GanttSchedule = () => {
                        <div className="flex-shrink-0 w-[1400px]">
             {/* Cabeçalho da tabela */}
             <div className="sticky top-0 bg-white border-b border-black/10 z-10">
-              <div className="grid grid-cols-9 text-sm font-semibold text-black">
-                <div className="p-3 text-center border-r border-black/10">Id</div>
-                                 <div className="p-3 text-center border-r border-black/10">Realizado</div>
-                <div className="p-3 border-r border-black/10">Nome da Sprint</div>
-                <div className="p-3 text-center border-r border-black/10">Duração</div>
-                <div className="p-3 text-center border-r border-black/10">Início</div>
-                <div className="p-3 text-center border-r border-black/10">Término</div>
-                <div className="p-3 text-center border-r border-black/10">Predição real</div>
-                <div className="p-3 text-center border-r border-black/10">Término real</div>
-                <div className="p-3 text-center">Tarefas realizadas</div>
+              <div className="grid grid-cols-9 text-sm font-semibold text-black h-16">
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Id</div>
+                                 <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Realizado</div>
+                <div className="px-3 py-3 border-r border-black/10 flex items-center">Nome da Sprint</div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Duração</div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Início</div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Término</div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Predição real</div>
+                <div className="px-3 py-3 text-center border-r border-black/10 flex items-center justify-center">Término real</div>
+                <div className="px-3 py-3 text-center flex items-center justify-center">Tarefas realizadas</div>
               </div>
             </div>
 
@@ -102,34 +102,34 @@ const GanttSchedule = () => {
               {tasks.map((task, index) => (
                 <div
                   key={task.id}
-                  className={`grid grid-cols-9 text-sm border-b border-black/5 hover:bg-black/5 transition-colors ${
+                  className={`grid grid-cols-9 text-sm border-b border-black/5 hover:bg-black/5 transition-colors h-16 ${
                     index % 2 === 0 ? "bg-black/0" : "bg-black/[0.02]"
                   }`}
                 >
-                  <div className="p-3 text-center border-r border-black/5 font-mono text-black/80">{task.id}</div>
-                                     <div className="p-3 text-center border-r border-black/5 flex items-center justify-center gap-1">
+                  <div className="px-3 py-3 text-center border-r border-black/5 font-mono text-black/80 flex items-center justify-center">{task.id}</div>
+                                     <div className="px-3 py-3 text-center border-r border-black/5 flex items-center justify-center gap-1">
                      <span className="text-black text-sm">{task.checked ? "✓" : "□"}</span>
                    </div>
                   <div
-                    className="p-3 border-r border-black/5 font-medium hover:text-black/80 transition-colors"
+                    className="px-3 py-3 border-r border-black/5 font-medium hover:text-black/80 transition-colors flex items-center"
                     style={{ marginLeft: `${(task.level - 1) * 12}px` }}
                   >
                     {task.name}
                   </div>
-                  <div className="p-3 text-center border-r border-black/5 text-black/70">{task.durationDays} dias</div>
-                  <div className="p-3 text-center border-r border-black/5 text-xs text-black/70">
+                  <div className="px-3 py-3 text-center border-r border-black/5 text-black/70 flex items-center justify-center">{task.durationDays} dias</div>
+                  <div className="px-3 py-3 text-center border-r border-black/5 text-xs text-black/70 flex items-center justify-center">
                     {formatDate(task.startPlanned)}
                   </div>
-                  <div className="p-3 text-center border-r border-black/5 text-xs text-black/70">
+                  <div className="px-3 py-3 text-center border-r border-black/5 text-xs text-black/70 flex items-center justify-center">
                     {formatDate(task.endPlanned)}
                   </div>
-                  <div className="p-3 text-center border-r border-black/5 text-xs text-black/70">
+                  <div className="px-3 py-3 text-center border-r border-black/5 text-xs text-black/70 flex items-center justify-center">
                     {task.startActual ? formatDate(task.startActual) : "ND"}
                   </div>
-                  <div className="p-3 text-center text-xs text-black/70 border-r border-black/5">
+                  <div className="px-3 py-3 text-center text-xs text-black/70 border-r border-black/5 flex items-center justify-center">
                     {task.endActual ? formatDate(task.endActual) : "ND"}
                   </div>
-                  <div className="p-3 text-xs text-black/70">
+                  <div className="px-3 py-3 text-xs text-black/70 flex items-center">
                     {task.completedTasks || "ND"}
                   </div>
                 </div>
@@ -181,12 +181,12 @@ const GanttSchedule = () => {
                  return (
                   <div
                     key={task.id}
-                    className={`relative h-12 border-b border-black/5 hover:bg-black/[0.02] transition-colors group ${
+                    className={`relative h-16 border-b border-black/5 hover:bg-black/[0.02] transition-colors group ${
                       index % 2 === 0 ? "bg-black/0" : "bg-black/[0.01]"
                     }`}
                   >
                     <div
-                      className="absolute top-2 h-8 bg-gray-400 rounded-sm shadow-sm group-hover:shadow-md transition-shadow"
+                      className="absolute top-4 h-8 bg-gray-400 rounded-sm shadow-sm group-hover:shadow-md transition-shadow"
                       style={{
                         left: `${plannedLeft}%`,
                         width: `${Math.max(plannedWidth, 1)}%`,
@@ -196,7 +196,7 @@ const GanttSchedule = () => {
 
                     {task.startActual && (
                       <div
-                        className="absolute top-2 h-8 bg-black/80 rounded-sm shadow-sm border border-black"
+                        className="absolute top-4 h-8 bg-black/80 rounded-sm shadow-sm border border-black"
                         style={{
                           left: `${actualLeft}%`,
                           width: `${actualWidth}%`,
