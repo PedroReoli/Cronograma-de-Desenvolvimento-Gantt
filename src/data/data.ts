@@ -39,7 +39,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: true,
-    name: 'Sprint 1 – Pesquisa inicial',
+    name: 'Pesquisa inicial',
     durationDays: 20,
     startPlanned: '2025-01-14',
     endPlanned: '2025-02-10',
@@ -51,7 +51,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: true,
-    name: 'Sprint 2 – Revisão e documentação inicial',
+    name: 'Documentação inicial',
     durationDays: 20,
     startPlanned: '2025-02-11',
     endPlanned: '2025-03-10',
@@ -63,7 +63,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: true,
-    name: 'Sprint 3 – Planejamento da solução',
+    name: 'Planejamento da solução',
     durationDays: 20,
     startPlanned: '2025-03-11',
     endPlanned: '2025-03-31',
@@ -75,7 +75,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: true,
-    name: 'Sprint 4 – Modelo de negócio',
+    name: 'Modelo de negócio',
     durationDays: 15,
     startPlanned: '2025-04-01',
     endPlanned: '2025-04-21',
@@ -87,7 +87,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: true,
-    name: 'Sprint 5 – Gestão econômica',
+    name: 'Gestão econômica',
     durationDays: 15,
     startPlanned: '2025-04-22',
     endPlanned: '2025-05-12',
@@ -99,7 +99,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: false,
-    name: 'Sprint 6 – Design da plataforma',
+    name: 'Design da plataforma',
     durationDays: 15,
     startPlanned: '2025-05-13',
     endPlanned: '2025-06-02',
@@ -111,7 +111,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: false,
-    name: 'Sprint 7 – Desenvolvimento MVP',
+    name: 'Desenvolvimento MVP',
     durationDays: 20,
     startPlanned: '2025-06-03',
     endPlanned: '2025-06-30',
@@ -123,7 +123,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: false,
-    name: 'Sprint 8 – Testes iniciais',
+    name: 'Testes iniciais',
     durationDays: 15,
     startPlanned: '2025-07-01',
     endPlanned: '2025-07-21',
@@ -135,7 +135,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: false,
-    name: 'Sprint 9 – Validação e ajustes',
+    name: 'Validação e ajustes',
     durationDays: 20,
     startPlanned: '2025-07-22',
     endPlanned: '2025-08-18',
@@ -147,7 +147,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: false,
-    name: 'Sprint 10 – Documentação técnica',
+    name: 'Documentação técnica',
     durationDays: 15,
     startPlanned: '2025-08-19',
     endPlanned: '2025-09-08',
@@ -159,7 +159,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: false,
-    name: 'Sprint 11 – Escrita final',
+    name: 'Escrita final',
     durationDays: 20,
     startPlanned: '2025-09-09',
     endPlanned: '2025-10-06',
@@ -171,7 +171,7 @@ const taskInputs: TaskInput[] = [
   {
     level: 2,
     checked: false,
-    name: 'Sprint 12 – Finalização e defesa',
+    name: 'Finalização e defesa',
     durationDays: 11,
     startPlanned: '2025-10-07',
     endPlanned: '2025-10-17',
