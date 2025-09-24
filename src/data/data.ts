@@ -12,6 +12,13 @@ export type Task = {
   completedTasks?: string // Tarefas realizadas
 }
 
+export type Quarter = {
+  id: number
+  name: string
+  startDate: string // ISO YYYY-MM-DD
+  endDate: string // ISO YYYY-MM-DD
+}
+
 // Tipo para dados sem ID (será gerado automaticamente)
 export type TaskInput = Omit<Task, 'id'>
 
@@ -180,6 +187,34 @@ const taskInputs: TaskInput[] = [
     percent: 0,
     completedTasks: 'Ajustes finais, entrega e defesa',
   },
+]
+
+// Dados dos trimestres editáveis
+export const quarters: Quarter[] = [
+  {
+    id: 1,
+    name: "1º Trimestre",
+    startDate: "2025-01-01",
+    endDate: "2025-03-31"
+  },
+  {
+    id: 2,
+    name: "2º Trimestre", 
+    startDate: "2025-04-01",
+    endDate: "2025-06-30"
+  },
+  {
+    id: 3,
+    name: "3º Trimestre",
+    startDate: "2025-07-01", 
+    endDate: "2025-09-30"
+  },
+  {
+    id: 4,
+    name: "4º Trimestre",
+    startDate: "2025-10-01",
+    endDate: "2025-12-31"
+  }
 ]
 
 // Exporta as tarefas com IDs gerados automaticamente

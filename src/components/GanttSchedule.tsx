@@ -1,7 +1,15 @@
 "use client"
 
-import { tasks, type Task } from "@/data/data"
-import { useMemo } from "react"
+import { type Task, type Quarter } from "@/data/data"
+import { useMemo, useState } from "react"
+import ProgressEditModal from "./ProgressEditModal"
+import QuickEditModal from "./QuickEditModal"
+
+interface GanttScheduleProps {
+  tasks: Task[]
+  quarters: Quarter[]
+  onTaskUpdate?: (updatedTask: Task) => void
+}
 
 // Funções utilitárias para cálculos de data
 const getYearBounds = (tasks: Task[]) => {
@@ -47,9 +55,12 @@ const formatDate = (dateString: string): string => {
   return `${dayName} ${day}/${month}/${year}`
 }
 
-const GanttSchedule = () => {
-  const yearBounds = useMemo(() => getYearBounds(tasks), [])
+const GanttSchedule = ({ tasks, quarters, onTaskUpdate }: GanttScheduleProps) => {
+  const yearBounds = useMemo(() => getYearBounds(tasks), [tasks])
   const totalDays = getDaysInYear(yearBounds.start.getFullYear())
+  const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const [showProgressEdit, setShowProgressEdit] = useState(false)
+  const [showQuickEdit, setShowQuickEdit] = useState(false)
 
   // Cálculo de posição e largura das barras
   const getBarPosition = (date: string) => {
@@ -64,13 +75,50 @@ const GanttSchedule = () => {
     return (duration / totalDays) * 100
   }
 
-  // Meses e trimestres
-  const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+  // Função para abrir edição completa (linhas da tabela)
+  const handleTaskClick = (task: Task) => {
+    setEditingTask(task)
+    setShowQuickEdit(true)
+  }
 
-  const quarters = ["1º trimestre", "2º trimestre", "3º trimestre", "4º trimestre"]
+  // Função para abrir edição de progresso (barras do Gantt)
+  const handleProgressClick = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation() // Evita que o clique se propague para a linha
+    setEditingTask(task)
+    setShowProgressEdit(true)
+  }
+
+  // Função para salvar alterações completas
+  const handleTaskSave = (updatedTask: Task) => {
+    if (onTaskUpdate) {
+      onTaskUpdate(updatedTask)
+    }
+    setShowQuickEdit(false)
+    setEditingTask(null)
+  }
+
+  // Função para salvar alterações de progresso
+  const handleProgressSave = (updatedTask: Task) => {
+    if (onTaskUpdate) {
+      onTaskUpdate(updatedTask)
+    }
+    setShowProgressEdit(false)
+    setEditingTask(null)
+  }
+
+  // Função para fechar modal
+  const handleCloseModal = () => {
+    setShowQuickEdit(false)
+    setShowProgressEdit(false)
+    setEditingTask(null)
+  }
+
+  // Meses
+  const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
 
   return (
     <div className="bg-white text-black border border-black/10 rounded-lg overflow-hidden relative">
+
       {/* Container principal com scroll horizontal */}
       <div className="overflow-x-auto">
         <div className="flex min-w-max">
@@ -110,21 +158,27 @@ const GanttSchedule = () => {
               {tasks.map((task, index) => (
                 <div
                   key={task.id}
-                  className={`grid grid-cols-9 text-sm border-b border-black/5 hover:bg-black/5 transition-colors h-16 ${
+                  onClick={() => handleTaskClick(task)}
+                  className={`grid grid-cols-9 text-sm border-b border-black/5 hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer h-16 ${
                     index % 2 === 0 ? "bg-black/0" : "bg-black/[0.02]"
                   }`}
+                  title="Clique para editar esta tarefa"
                 >
-                  <div className="px-3 py-3 text-center border-r border-black/5 font-mono text-black/80 flex items-center justify-center">
+                  <div className="px-3 py-3 text-center border-r border-black/5 font-mono text-black/80 flex items-center justify-center relative">
                     {task.id}
+                    <div className="absolute top-1 right-1 w-2 h-2 bg-blue-400 rounded-full opacity-60"></div>
                   </div>
                   <div className="px-3 py-3 text-center border-r border-black/5 flex items-center justify-center gap-1">
                     <span className="text-black text-sm">{task.checked ? "✓" : "□"}</span>
                   </div>
                   <div
-                    className="px-3 py-3 border-r border-black/5 font-medium hover:text-black/80 transition-colors flex items-center"
+                    className="px-3 py-3 border-r border-black/5 font-medium hover:text-black/80 transition-colors flex items-center gap-2"
                     style={{ marginLeft: `${(task.level - 1) * 12}px` }}
                   >
                     {task.name}
+                    <svg className="w-3 h-3 text-blue-500 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                   </div>
                   <div className="px-3 py-3 text-center border-r border-black/5 text-black/70 flex items-center justify-center">
                     {task.durationDays} dias
@@ -155,10 +209,11 @@ const GanttSchedule = () => {
               <div className="grid grid-cols-4 text-xs font-medium text-gray-600 border-b border-gray-200">
                 {quarters.map((quarter) => (
                   <div
-                    key={quarter}
+                    key={quarter.id}
                     className="py-3 px-0 text-center border-r border-gray-200 last:border-r-0 bg-gray-100 text-[10px] flex items-center justify-center h-8"
+                    title={`${quarter.name}: ${quarter.startDate} a ${quarter.endDate}`}
                   >
-                    {quarter}
+                    {quarter.name}
                   </div>
                 ))}
               </div>
@@ -176,54 +231,90 @@ const GanttSchedule = () => {
               </div>
             </div>
 
-            {/* Barras do Gantt */}
-            <div className="relative">
-              {tasks.map((task, index) => {
-                const plannedLeft = getBarPosition(task.startPlanned)
-                const plannedWidth = getBarWidth(task.startPlanned, task.endPlanned)
-                const actualLeft = task.startActual ? getBarPosition(task.startActual) : plannedLeft
-                const actualWidth =
-                  task.startActual && task.endActual ? getBarWidth(task.startActual, task.endActual) : plannedWidth
+             {/* Barras do Gantt */}
+             <div className="relative">
+               {tasks.map((task, index) => {
+                 const plannedLeft = getBarPosition(task.startPlanned)
+                 const plannedWidth = getBarWidth(task.startPlanned, task.endPlanned)
+                 const actualLeft = task.startActual ? getBarPosition(task.startActual) : plannedLeft
+                 const actualWidth =
+                   task.startActual && task.endActual ? getBarWidth(task.startActual, task.endActual) : plannedWidth
 
-                return (
-                  <div
-                    key={task.id}
-                    className={`relative h-16 border-b border-black/5 hover:bg-black/[0.02] transition-colors group ${
-                      index % 2 === 0 ? "bg-black/0" : "bg-black/[0.01]"
-                    }`}
-                  >
-                    <div
-                      className="absolute top-4 h-8 bg-gray-300 rounded-sm shadow-sm group-hover:shadow-md transition-shadow"
-                      style={{
-                        left: `${plannedLeft}%`,
-                        width: `${Math.max(plannedWidth, 1)}%`,
-                      }}
-                      title={`${task.name} - Previsto: ${formatDate(task.startPlanned)} a ${formatDate(task.endPlanned)}`}
-                    />
+                 // Cálculo da barra de progresso (parte editável)
+                 const progressPercent = task.percent || 0
+                 const progressWidth = (plannedWidth * progressPercent) / 100
 
-                    {task.startActual && (
-                      <div
-                        className="absolute top-4 h-8 bg-gray-600 rounded-sm shadow-sm border border-gray-500"
-                        style={{
-                          left: `${actualLeft}%`,
-                          width: `${actualWidth}%`,
-                        }}
-                        title={`${task.name} - Real: ${formatDate(task.startActual)} a ${task.endActual ? formatDate(task.endActual) : "Em andamento"}`}
-                      />
-                    )}
+                 return (
+                   <div
+                     key={task.id}
+                     onClick={(e) => handleProgressClick(task, e)}
+                     className={`relative h-16 border-b border-black/5 hover:bg-gray-50 transition-colors cursor-pointer group ${
+                       index % 2 === 0 ? "bg-black/0" : "bg-black/[0.01]"
+                     }`}
+                     title={`${task.name} - Clique para editar progresso`}
+                   >
+                     {/* Barra de fundo (período planejado) - NÃO editável */}
+                     <div
+                       className="absolute top-4 h-8 border-2 border-gray-400 rounded-sm bg-transparent z-0"
+                       style={{
+                         left: `${plannedLeft}%`,
+                         width: `${Math.max(plannedWidth, 1)}%`,
+                       }}
+                       title={`${task.name} - Planejado: ${formatDate(task.startPlanned)} a ${formatDate(task.endPlanned)}`}
+                     />
 
-                    <div className="absolute inset-0 grid grid-cols-12 pointer-events-none">
-                      {Array.from({ length: 12 }).map((_, i) => (
-                        <div key={i} className="border-r border-gray-200" />
-                      ))}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+                     {/* Barra de datas reais (cinza escuro) - NÃO editável */}
+                     {task.startActual && (
+                       <div
+                         className="absolute top-4 h-8 bg-gray-600 rounded-sm shadow-sm border border-gray-500 z-10"
+                         style={{
+                           left: `${actualLeft}%`,
+                           width: `${actualWidth}%`,
+                         }}
+                         title={`${task.name} - Real: ${formatDate(task.startActual)} a ${task.endActual ? formatDate(task.endActual) : "Em andamento"}`}
+                       />
+                     )}
+
+                     {/* Barra de progresso (parte editável) - cinza claro - Z-INDEX MAIOR */}
+                     {progressPercent > 0 && (
+                       <div
+                         className="absolute top-4 h-8 bg-gray-300 rounded-sm shadow-sm z-20"
+                         style={{
+                           left: `${plannedLeft}%`,
+                           width: `${Math.max(progressWidth, 2)}%`,
+                         }}
+                         title={`${task.name} - Progresso: ${progressPercent}%`}
+                       />
+                     )}
+
+                     <div className="absolute inset-0 grid grid-cols-12 pointer-events-none">
+                       {Array.from({ length: 12 }).map((_, i) => (
+                         <div key={i} className="border-r border-gray-200" />
+                       ))}
+                     </div>
+                   </div>
+                 )
+               })}
+             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal de Edição Rápida (linhas da tabela) */}
+      <QuickEditModal
+        isOpen={showQuickEdit}
+        onClose={handleCloseModal}
+        task={editingTask}
+        onSave={handleTaskSave}
+      />
+
+      {/* Modal de Edição de Progresso (barras do Gantt) */}
+      <ProgressEditModal
+        isOpen={showProgressEdit}
+        onClose={handleCloseModal}
+        task={editingTask}
+        onSave={handleProgressSave}
+      />
     </div>
   )
 }
