@@ -12,9 +12,20 @@ export type Task = {
   completedTasks?: string // Tarefas realizadas
 }
 
-export const tasks: Task[] = [
+// Tipo para dados sem ID (será gerado automaticamente)
+export type TaskInput = Omit<Task, 'id'>
+
+// Função para criar tarefas com ID auto increment
+const createTasks = (taskInputs: TaskInput[]): Task[] => {
+  return taskInputs.map((task, index) => ({
+    ...task,
+    id: index + 1, // Auto increment: 1, 2, 3, 4...
+  }))
+}
+
+// Dados das tarefas (sem ID - será gerado automaticamente)
+const taskInputs: TaskInput[] = [
   {
-    id: 1,
     level: 1,
     checked: false,
     name: 'TCC FalaAtípica',
@@ -26,10 +37,9 @@ export const tasks: Task[] = [
     percent: 31,
   },
   {
-    id: 2,
     level: 2,
     checked: true,
-    name: ' Pesquisa inicial',
+    name: 'Sprint 1 – Pesquisa inicial',
     durationDays: 20,
     startPlanned: '2025-01-14',
     endPlanned: '2025-02-10',
@@ -39,10 +49,9 @@ export const tasks: Task[] = [
     completedTasks: 'Metodologias ativas, startups na educação',
   },
   {
-    id: 3,
     level: 2,
     checked: true,
-    name: ' Revisão e documentação inicial',
+    name: 'Sprint 2 – Revisão e documentação inicial',
     durationDays: 20,
     startPlanned: '2025-02-11',
     endPlanned: '2025-03-10',
@@ -52,10 +61,9 @@ export const tasks: Task[] = [
     completedTasks: 'Growth hacking, inclusão, documentação da pesquisa',
   },
   {
-    id: 4,
     level: 2,
     checked: true,
-    name: 'Planejamento da solução',
+    name: 'Sprint 3 – Planejamento da solução',
     durationDays: 20,
     startPlanned: '2025-03-11',
     endPlanned: '2025-03-31',
@@ -65,10 +73,9 @@ export const tasks: Task[] = [
     completedTasks: 'Plano de desenvolvimento da startup',
   },
   {
-    id: 5,
     level: 2,
     checked: true,
-    name: 'Modelo de negócio',
+    name: 'Sprint 4 – Modelo de negócio',
     durationDays: 15,
     startPlanned: '2025-04-01',
     endPlanned: '2025-04-21',
@@ -78,10 +85,9 @@ export const tasks: Task[] = [
     completedTasks: 'Construção do modelo de negócio',
   },
   {
-    id: 6,
     level: 2,
     checked: true,
-    name: 'Gestão econômica',
+    name: 'Sprint 5 – Gestão econômica',
     durationDays: 15,
     startPlanned: '2025-04-22',
     endPlanned: '2025-05-12',
@@ -91,10 +97,9 @@ export const tasks: Task[] = [
     completedTasks: 'Análise de custos e viabilidade',
   },
   {
-    id: 7,
     level: 2,
     checked: false,
-    name: 'Design da plataforma',
+    name: 'Sprint 6 – Design da plataforma',
     durationDays: 15,
     startPlanned: '2025-05-13',
     endPlanned: '2025-06-02',
@@ -104,10 +109,9 @@ export const tasks: Task[] = [
     completedTasks: 'Fluxos, telas e arquitetura do sistema',
   },
   {
-    id: 8,
     level: 2,
     checked: false,
-    name: 'Desenvolvimento MVP',
+    name: 'Sprint 7 – Desenvolvimento MVP',
     durationDays: 20,
     startPlanned: '2025-06-03',
     endPlanned: '2025-06-30',
@@ -117,10 +121,9 @@ export const tasks: Task[] = [
     completedTasks: 'Codificação do protótipo',
   },
   {
-    id: 9,
     level: 2,
     checked: false,
-    name: 'Testes iniciais',
+    name: 'Sprint 8 – Testes iniciais',
     durationDays: 15,
     startPlanned: '2025-07-01',
     endPlanned: '2025-07-21',
@@ -130,10 +133,9 @@ export const tasks: Task[] = [
     completedTasks: 'Testes com usuários-alvo',
   },
   {
-    id: 10,
     level: 2,
     checked: false,
-    name: 'Validação e ajustes',
+    name: 'Sprint 9 – Validação e ajustes',
     durationDays: 20,
     startPlanned: '2025-07-22',
     endPlanned: '2025-08-18',
@@ -143,10 +145,9 @@ export const tasks: Task[] = [
     completedTasks: 'Feedback, correções no MVP',
   },
   {
-    id: 11,
     level: 2,
     checked: false,
-    name: 'Documentação técnica',
+    name: 'Sprint 10 – Documentação técnica',
     durationDays: 15,
     startPlanned: '2025-08-19',
     endPlanned: '2025-09-08',
@@ -156,10 +157,9 @@ export const tasks: Task[] = [
     completedTasks: 'Documentação do sistema e acadêmica',
   },
   {
-    id: 12,
     level: 2,
     checked: false,
-    name: 'Escrita final',
+    name: 'Sprint 11 – Escrita final',
     durationDays: 20,
     startPlanned: '2025-09-09',
     endPlanned: '2025-10-06',
@@ -169,10 +169,9 @@ export const tasks: Task[] = [
     completedTasks: 'Redação final do TCC',
   },
   {
-    id: 13,
     level: 2,
     checked: false,
-    name: 'Finalização e defesa',
+    name: 'Sprint 12 – Finalização e defesa',
     durationDays: 11,
     startPlanned: '2025-10-07',
     endPlanned: '2025-10-17',
@@ -182,3 +181,6 @@ export const tasks: Task[] = [
     completedTasks: 'Ajustes finais, entrega e defesa',
   },
 ]
+
+// Exporta as tarefas com IDs gerados automaticamente
+export const tasks: Task[] = createTasks(taskInputs)
